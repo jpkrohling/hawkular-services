@@ -50,6 +50,23 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Add our default keystore configuration -->
+  <xsl:template match="/*[local-name()='server']/*[local-name()='management']/*[local-name()='security-realms']/*[local-name()='security-realm' and @name='ApplicationRealm']/*[last()]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|comment()|@*" />
+    </xsl:copy>
+    <server-identities>
+      <ssl>
+        <keystore
+            path="hawkular-server.keystore"
+            relative-to="jboss.server.config.dir"
+            keystore-password="changeme"
+            alias="hawkular-server"
+            key-password="changeme" />
+      </ssl>
+    </server-identities>
+  </xsl:template>
+
   <!-- copy everything else as-is -->
   <xsl:template match="node()|comment()|@*">
     <xsl:copy>
